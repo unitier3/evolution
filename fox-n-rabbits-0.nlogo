@@ -33,7 +33,7 @@ to setup-burrows
     set color brown
     setxy 3 3
     set shape "circle"
-    set size 1.5
+    set size 2.5
   ]
 end
 
@@ -50,6 +50,7 @@ to setup-rabbits
     set vision 5
     set speed 0.5
     set reproduced false
+    set size 1.5
     ;; ... a random x & y coordinate
   ]
 end
@@ -98,7 +99,7 @@ to move-rabbits
       ]
     ]
 
-    if reproduced = false and hunger-current <= 100 and age >= 100
+    if reproduced = false and hunger-current <= 150 and age >= 50
     [
       face nearest-of burrows
       if any? burrows-here
@@ -106,15 +107,14 @@ to move-rabbits
        hatch-rabbits 1
        [
          set age 0
-         set hunger-current 25
-         set hunger-max (hunger-max + (random -10 - 20))
-         set hunger-comsumption (hunger-comsumption + (random -10 - 20))
-         set vision (vision + (random -1 - 2))
-         set speed (speed + (random -0.1 - 0.2))
+         set hunger-current 100
+         set hunger-max (hunger-max + (random 20))
+         set hunger-comsumption (hunger-comsumption + (random 20))
+         set vision (vision + (random 3))
+         set speed (speed + (random 0.5))
          set reproduced false
          set color rgb 20 12 12
        ]
-      set hunger-current (hunger-current + 25)
       set reproduced true
       ]
     ]
@@ -162,7 +162,7 @@ num-of-rabbits
 num-of-rabbits
 0
 100
-9.0
+10.0
 1
 1
 NIL
@@ -177,7 +177,7 @@ num-of-berries
 num-of-berries
 0
 100
-6.0
+100.0
 1
 1
 NIL
