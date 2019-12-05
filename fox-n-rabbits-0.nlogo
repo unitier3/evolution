@@ -9,8 +9,9 @@ __includes [ "sxl-utils.nls" ]
 
 breed [berries berry]
 breed [rabbits rabbit]
+breed [burrows burrow]
 
-rabbits-own [hunger-current hunger-max age vision speed]
+rabbits-own [hunger-current hunger-max hunger-comsumption age vision speed reproduced]
 
 ;-------------------------------------------
 ; here is all the stuff to set things up
@@ -21,20 +22,35 @@ to setup
   ask patches [set pcolor green]       ;; set the background (patches) to grey
   setup-rabbits
   setup-berries
+  setup-burrows
   reset-ticks
+end
+
+to setup-burrows
+  create-burrows 1
+  ask burrows
+  [
+    set color brown
+    setxy 3 3
+    set shape "circle"
+    set size 2.5
+  ]
 end
 
 to setup-rabbits
   create-rabbits num-of-rabbits
   ask rabbits
   [ set color white
-    setxy random-xcor random-ycor       ;; set this rabbit coordintes to...
+    setxy (random  5) (random 5) ;;(random 15 - 17) (random 15 - 16)      ;; set this rabbit coordintes to...
     set shape "rabbit"
     set age 0
-    set hunger-current 110
-    set hunger-max 200
+    set hunger-current 100
+    set hunger-max 500
+    set hunger-comsumption 100
     set vision 5
     set speed 0.5
+    set reproduced false
+    set size 1.5
     ;; ... a random x & y coordinate
   ]
 end
@@ -44,7 +60,7 @@ to setup-berries
   ask berries
   [
     set color red
-    setxy random-xcor random-ycor
+    setxy ((random-xcor / 3) + (max-pxcor / 2)) ((random-ycor / 3) + (max-pycor / 2)) ;;(random 8 - 20) (random 8 - 20)
     set shape "circle"
     set size 0.5
   ]
@@ -58,7 +74,10 @@ end
 
 to go
   move-rabbits
-  ;;if not any? rabbits [ stop ]
+  if not any? rabbits
+  [
+    stop
+  ]
 
   tick                                ;; update screen graphics
 end
@@ -66,31 +85,40 @@ end
 to move-rabbits
   ask rabbits
   [
-    if hunger-current <= 100
-    [
-      hatch-rabbits 1
-      [
-      set age 0
-      set hunger-current 110
-      set hunger-max (hunger-max + (random -10 - 20))
-      set vision (vision + (random -1 - 2))
-      set speed (speed + (random -0.1 - 0.2))
-      ]
-      set hunger-current (hunger-current + 25)
-    ]
     if hunger-current >= hunger-max [ die ]
-    if age >= 200 [ die ]
+    if age >= 400 [ die ]
     ;;if not any? berries [ stop ]
 
-    if any? berries in-radius vision
+    if any? berries in-radius vision and hunger-current > 75
     [
       face nearest-of berries
       if any? berries-here
       [
-        set hunger-current (hunger-current - 25)
+        set hunger-current (hunger-current - hunger-comsumption)
         ask berries-here [die]
       ]
     ]
+
+    if reproduced = false and hunger-current <= 150 and age >= 50
+    [
+      face nearest-of burrows
+      if any? burrows-here
+      [
+       hatch-rabbits 1
+       [
+         set age 0
+         set hunger-current 100
+         set hunger-max (hunger-max + (random 20))
+         set hunger-comsumption (hunger-comsumption + (random 20))
+         set vision (vision + (random 3))
+         set speed (speed + (random 0.5))
+         set reproduced false
+         set color rgb 20 12 12
+       ]
+      set reproduced true
+      ]
+    ]
+
     set hunger-current (hunger-current + 1)
     set age (age + 1)
     wiggle                            ;; randomly turn a bit
@@ -99,10 +127,10 @@ to move-rabbits
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-240
-15
-677
-453
+233
+10
+670
+448
 -1
 -1
 13.0
@@ -112,13 +140,13 @@ GRAPHICS-WINDOW
 1
 1
 0
+0
+0
 1
-1
-1
--16
-16
--16
-16
+0
+32
+0
+32
 1
 1
 1
@@ -134,7 +162,7 @@ num-of-rabbits
 num-of-rabbits
 0
 100
-2.0
+10.0
 1
 1
 NIL
@@ -149,7 +177,7 @@ num-of-berries
 num-of-berries
 0
 100
-15.0
+100.0
 1
 1
 NIL
