@@ -44,7 +44,7 @@ to setup-rabbits
     setxy (random  5) (random 5) ;;(random 15 - 17) (random 15 - 16)      ;; set this rabbit coordintes to...
     set shape "rabbit"
     set age 0
-    set age-max 400
+    set age-max 00
     set hunger-current 100
     set hunger-max 500
     set hunger-comsumption 100
@@ -117,15 +117,18 @@ to move-rabbits
        hatch-rabbits (random 3)
        [
          set age 0
-         set age-max (age-max + (random 80))
          set hunger-current 100
-         set hunger-max (hunger-max + (random 50))
-         set hunger-comsumption (hunger-comsumption + (random 50))
-         set vision (vision + (random 5))
-         set speed (speed + ((random 5) ))
          set reproduced false
          set color rgb 237 215 154
          set gen (gen + 1)
+         set age-max (age-max + (random 5))
+
+         let tmp (random 3)
+
+         if tmp = 0 [set hunger-max (hunger-max + (random 50))]
+         if tmp = 1 [set hunger-comsumption (hunger-comsumption + (random 50))]
+         if tmp = 2 [set vision (vision + (random 5))]
+         if tmp = 3 [set speed (speed + ((random 2) / 10))]
        ]
       set reproduced true
       ]
@@ -232,7 +235,7 @@ NIL
 MONITOR
 864
 102
-1033
+1133
 147
 NIL
 count rabbits with [gen = 1]
@@ -242,9 +245,9 @@ count rabbits with [gen = 1]
 
 MONITOR
 864
-165
-1033
-210
+163
+1133
+208
 NIL
 count rabbits with [gen = 2]
 17
@@ -253,9 +256,9 @@ count rabbits with [gen = 2]
 
 MONITOR
 865
-232
-1033
-277
+230
+1135
+275
 NIL
 [gen] of rabbits
 17
@@ -264,9 +267,9 @@ NIL
 
 MONITOR
 865
-291
-1034
-336
+289
+1136
+334
 NIL
 [speed] of rabbits
 17
@@ -275,9 +278,9 @@ NIL
 
 MONITOR
 864
-358
-1036
-403
+356
+1137
+401
 NIL
 [vision] of rabbits
 17
