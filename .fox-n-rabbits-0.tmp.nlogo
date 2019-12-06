@@ -44,7 +44,7 @@ to setup-rabbits
     setxy (random  5) (random 5) ;;(random 15 - 17) (random 15 - 16)      ;; set this rabbit coordintes to...
     set shape "rabbit"
     set age 0
-    set age-max 00
+    set age-max 500
     set hunger-current 100
     set hunger-max 500
     set hunger-comsumption 100
@@ -283,6 +283,28 @@ MONITOR
 401
 NIL
 [vision] of rabbits
+17
+1
+11
+
+MONITOR
+864
+422
+1136
+467
+NIL
+[hunger-max] of rabbits
+17
+1
+11
+
+MONITOR
+909
+502
+1103
+547
+NIL
+[hunger-comsumption] of rabbits
 17
 1
 11
