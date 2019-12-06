@@ -122,7 +122,7 @@ to move-rabbits
          set hunger-max (hunger-max + (random 50))
          set hunger-comsumption (hunger-comsumption + (random 50))
          set vision (vision + (random 5))
-         set speed (speed + (random 5))
+         set speed (speed + ((random 5) ))
          set reproduced false
          set color rgb 237 215 154
          set gen (gen + 1)
