@@ -106,6 +106,13 @@ to move-rabbits
       [
         set hunger-current (hunger-current - hunger-comsumption)
         ask berries-here [die]
+        hatch-berries 6
+        [
+        set color red
+        setxy ((random-xcor / 3) + (max-pxcor / 2)) ((random-ycor / 3) + (max-pycor / 2)) ;;(random 8 - 20) (random 8 - 20)
+        set shape "circle"
+        set size 0.5
+        ]
       ]
     ]
 
@@ -671,7 +678,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.1
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
