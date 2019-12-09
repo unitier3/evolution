@@ -11,7 +11,7 @@ breed [berries berry]
 breed [rabbits rabbit]
 breed [burrows burrow]
 
-rabbits-own [hunger-current hunger-max hunger-comsumption age vision speed reproduced]
+rabbits-own [hunger-current hunger-max hunger-comsumption age age-max vision speed reproduced gen]
 
 ;-------------------------------------------
 ; here is all the stuff to set things up
@@ -44,6 +44,7 @@ to setup-rabbits
     setxy (random  5) (random 5) ;;(random 15 - 17) (random 15 - 16)      ;; set this rabbit coordintes to...
     set shape "rabbit"
     set age 0
+    set age-max 500
     set hunger-current 100
     set hunger-max 500
     set hunger-comsumption 100
@@ -51,6 +52,7 @@ to setup-rabbits
     set speed 0.5
     set reproduced false
     set size 1.5
+    set gen 0
     ;; ... a random x & y coordinate
   ]
 end
@@ -85,8 +87,16 @@ end
 to move-rabbits
   ask rabbits
   [
+    if any? rabbits with [gen != 0]
+    [
+      if any? rabbits with [gen = [gen - 1] of myself]
+      [
+        stop
+      ]
+    ]
+
     if hunger-current >= hunger-max [ die ]
-    if age >= 400 [ die ]
+    if age >= age-max [ die ]
     ;;if not any? berries [ stop ]
 
     if any? berries in-radius vision and hunger-current > 75
@@ -104,16 +114,21 @@ to move-rabbits
       face nearest-of burrows
       if any? burrows-here
       [
-       hatch-rabbits 1
+       hatch-rabbits (random 3)
        [
          set age 0
          set hunger-current 100
-         set hunger-max (hunger-max + (random 20))
-         set hunger-comsumption (hunger-comsumption + (random 20))
-         set vision (vision + (random 3))
-         set speed (speed + (random 0.5))
          set reproduced false
-         set color rgb 20 12 12
+         set color rgb 237 215 154
+         set gen (gen + 1)
+         set age-max (age-max + (random 5))
+
+         let tmp (random 3)
+
+         if tmp = 0 [set hunger-max (hunger-max + (random 50))]
+         if tmp = 1 [set hunger-comsumption (hunger-comsumption + (random 50))]
+         if tmp = 2 [set vision (vision + (random 5))]
+         if tmp = 3 [set speed (speed + ((random 2) / 10))]
        ]
       set reproduced true
       ]
@@ -216,6 +231,83 @@ NIL
 NIL
 NIL
 1
+
+MONITOR
+864
+102
+1133
+147
+NIL
+count rabbits with [gen = 1]
+17
+1
+11
+
+MONITOR
+864
+163
+1133
+208
+NIL
+count rabbits with [gen = 2]
+17
+1
+11
+
+MONITOR
+865
+230
+1135
+275
+NIL
+[gen] of rabbits
+17
+1
+11
+
+MONITOR
+865
+289
+1136
+334
+NIL
+[speed] of rabbits
+17
+1
+11
+
+MONITOR
+864
+356
+1137
+401
+NIL
+[vision] of rabbits
+17
+1
+11
+
+MONITOR
+864
+422
+1136
+467
+NIL
+[hunger-max] of rabbits
+17
+1
+11
+
+MONITOR
+865
+484
+1135
+529
+NIL
+[hunger-comsumption] of rabbits
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
