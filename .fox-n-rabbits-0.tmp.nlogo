@@ -128,25 +128,25 @@ to move-rabbits
           let tmp (random 3)
           let point ((random 2) + 1)
 
-          if vision - point > 0 and speed - point > 0 and energy-per-tick > 0 and energy-per-tick < 12
+          if vision - point > 0 or speed - point > 0 or energy-per-tick > 0
           [
             if tmp = 0
             [
               set vision (vision + point)
               set speed (speed - (point / 2))
-              set energy-per-tick (energy-per-tick + 1)
+              set energy-per-tick (energy-per-tick + )
 
             ]
             if tmp = 1
             [
               set speed (speed + point)
               set vision (vision - (point / 2))
-              set energy-per-tick (energy-per-tick + 1)
+              set energy-per-tick (energy-per-tick + (point / 2))
 
             ]
             if tmp = 2
             [
-              set energy-per-tick (energy-per-tick - 1)
+              set energy-per-tick (energy-per-tick - point)
               set speed (speed - (point / 2))
               set vision (vision - (point / 2))
             ]
