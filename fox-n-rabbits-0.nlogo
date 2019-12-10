@@ -38,18 +38,18 @@ to setup-burrows
 end
 
 to setup-rabbits
-  create-rabbits num-of-rabbits
+  create-rabbits (num-of-rabbits)
   ask rabbits
   [ set color white
     setxy (random  5) (random 5) ;;(random 15 - 17) (random 15 - 16)      ;; set this rabbit coordintes to...
     set shape "rabbit"
     set age 0
     set age-max 500
-    set hunger-current 100
+    set hunger-current 50
     set hunger-max 500
     set hunger-comsumption 100
     set vision 5
-    set speed 0.5
+    set speed 5
     set reproduced false
     set size 1.5
     set gen 0
@@ -62,7 +62,7 @@ to setup-berries
   ask berries
   [
     set color red
-    setxy ((random-xcor / 3) + (max-pxcor / 2)) ((random-ycor / 3) + (max-pycor / 2)) ;;(random 8 - 20) (random 8 - 20)
+    setxy ((random 25) + 7) ((random 25) + 7) ;;(random 8 - 20) (random 8 - 20)
     set shape "circle"
     set size 0.5
   ]
@@ -76,11 +76,18 @@ end
 
 to go
   move-rabbits
-  if not any? rabbits
+  if not any? rabbits[stop]
+  if ticks > 0 and ticks mod 500 = 0
   [
-    stop
-  ]
+    create-berries num-of-berries
+    [
+      set color red
+      setxy ((random-xcor / 3) + (max-pxcor / 2)) ((random-ycor / 3) + (max-pycor / 2)) ;;(random 8 - 20) (random 8 - 20)
+      set shape "circle"
+      set size 0.5
+    ]
 
+  ]
   tick                                ;; update screen graphics
 end
 
@@ -93,13 +100,14 @@ to move-rabbits
       [
         stop
       ]
+
     ]
 
     if hunger-current >= hunger-max [ die ]
     if age >= age-max [ die ]
     ;;if not any? berries [ stop ]
 
-    if any? berries in-radius vision and hunger-current > 75
+    if any? berries in-radius vision and hunger-current > 50
     [
       face nearest-of berries
       if any? berries-here
@@ -109,26 +117,38 @@ to move-rabbits
       ]
     ]
 
-    if reproduced = false and hunger-current <= 150 and age >= 50
+    if reproduced = false and hunger-current <= 100 and age >= 50
     [
       face nearest-of burrows
       if any? burrows-here
       [
-       hatch-rabbits (random 3)
+       hatch-rabbits ((random 3) + 1)
        [
+         ; ifelse
+         ; speed > 5
+         ; [
+         ;   set speed (speed + ((random 2) + 1))
+         ; ]
+         ;
+         ; [
+         ;   ifelse vision > 5
+         ; [
+         ;   set vision (vision + ((random 2) + 1))
+         ; ]
+         ;   [
+              let tmp (random 2)
+
+              if tmp = 0 [set vision (vision + ((random 2) + 1))]
+              if tmp = 1 [set speed (speed + ((random 2) + 1))]
+         ;   ]
+          ;]
+
+
          set age 0
          set hunger-current 100
          set reproduced false
-         set color rgb 237 215 154
+         set color rgb (260 - (vision * 4)) (260 - (speed * 4)) 255
          set gen (gen + 1)
-         set age-max (age-max + (random 5))
-
-         let tmp (random 3)
-
-         if tmp = 0 [set hunger-max (hunger-max + (random 50))]
-         if tmp = 1 [set hunger-comsumption (hunger-comsumption + (random 50))]
-         if tmp = 2 [set vision (vision + (random 5))]
-         if tmp = 3 [set speed (speed + ((random 2) / 10))]
        ]
       set reproduced true
       ]
@@ -137,14 +157,14 @@ to move-rabbits
     set hunger-current (hunger-current + 1)
     set age (age + 1)
     wiggle                            ;; randomly turn a bit
-    forward speed                     ;; move forward 1 step
+    forward (speed / 10)                     ;; move forward 1 step
   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-233
+239
 10
-670
+676
 448
 -1
 -1
@@ -192,7 +212,7 @@ num-of-berries
 num-of-berries
 0
 100
-100.0
+5.0
 1
 1
 NIL
@@ -238,38 +258,16 @@ MONITOR
 1133
 147
 NIL
-count rabbits with [gen = 1]
-17
-1
-11
-
-MONITOR
-864
-163
-1133
-208
-NIL
-count rabbits with [gen = 2]
-17
-1
-11
-
-MONITOR
-865
-230
-1135
-275
-NIL
 [gen] of rabbits
 17
 1
 11
 
 MONITOR
-865
-289
-1136
-334
+863
+158
+1134
+203
 NIL
 [speed] of rabbits
 17
@@ -277,10 +275,10 @@ NIL
 11
 
 MONITOR
-864
-356
-1137
-401
+862
+214
+1135
+259
 NIL
 [vision] of rabbits
 17
@@ -288,21 +286,10 @@ NIL
 11
 
 MONITOR
-864
-422
-1136
-467
-NIL
-[hunger-max] of rabbits
-17
-1
-11
-
-MONITOR
-865
-484
-1135
-529
+862
+272
+1132
+317
 NIL
 [hunger-comsumption] of rabbits
 17
