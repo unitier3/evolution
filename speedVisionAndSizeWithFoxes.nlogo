@@ -13,7 +13,7 @@ breed [burrows burrow]
 breed [foxes fox]
 
 rabbits-own [energy-current energy-max energy-per-berry age age-max vision speed weight trait-points reproduced gen]
-foxes-own [age vision speed energy-current energy-max energy-per-bunny ]
+foxes-own [age vision speed energy-current energy-max energy-per-bunny reproduced]
 
 ;-------------------------------------------
 ; here is all the stuff to set things up
@@ -64,7 +64,7 @@ to setup-rabbits
 end
 
 to setup-foxes
-  create-foxes 1
+  create-foxes 2
   ask foxes
   [ set color orange
     setxy ((random  5) + 40) ((random  5) + 10)
@@ -72,7 +72,8 @@ to setup-foxes
     set age 0
     set energy-current 250
     set energy-max 800
-    set energy-per-bunny 250
+    set energy-per-bunny 450
+    set reproduced false
     set vision 3.5
     set speed 3.5
     set size 1.5
@@ -232,13 +233,19 @@ to move-foxes
       set heading 45
     ]
     [
-      if energy-current > 250 and any? rabbits with [xcor > 6 and ycor > 6]
+      ifelse energy-current < 150 ;and reproduced = false
       [
-        face nearest-of rabbits with [xcor > 6 and ycor > 6 and max [weight] of rabbits with [xcor > 6 and ycor > 6] = weight]
-        if any? rabbits-here
+        face nearest-of foxes
+      ]
+      [
+        if energy-current > 250 and any? rabbits with [xcor > 6 and ycor > 6]
         [
-          ask rabbits-here [die]
-          set energy-current (energy-current - energy-per-bunny)
+          face nearest-of rabbits with [xcor > 6 and ycor > 6 and max [weight] of rabbits with [xcor > 6 and ycor > 6] = weight]
+          if any? rabbits-here
+          [
+            ask rabbits-here [die]
+            set energy-current (energy-current - energy-per-bunny)
+          ]
         ]
       ]
     ]
@@ -300,7 +307,7 @@ num-of-berries
 num-of-berries
 0
 100
-0.0
+12.0
 1
 1
 NIL
@@ -495,6 +502,17 @@ MONITOR
 299
 NIL
 count rabbits with [weight > (global-trait-points / 3)]
+17
+1
+11
+
+MONITOR
+1499
+360
+1655
+405
+NIL
+[energy-current] of foxes
 17
 1
 11
