@@ -11,7 +11,7 @@ breed [berries berry]
 breed [rabbits rabbit]
 breed [burrows burrow]
 
-rabbits-own [hunger-current hunger-max hunger-comsumption age age-max vision speed reproduced gen]
+rabbits-own [energy-current energy-max energy-per-berry age age-max vision speed weight trait-points reproduced gen]
 
 ;-------------------------------------------
 ; here is all the stuff to set things up
@@ -19,7 +19,8 @@ rabbits-own [hunger-current hunger-max hunger-comsumption age age-max vision spe
 
 to setup
   clear-all                           ;; clear the screen
-  ask patches [set pcolor green]       ;; set the background (patches) to grey
+  ask patches [set pcolor green]       ;; set the background (patches) to green
+  set num-of-berries 12
   setup-rabbits
   setup-berries
   setup-burrows
@@ -38,20 +39,22 @@ to setup-burrows
 end
 
 to setup-rabbits
-  create-rabbits num-of-rabbits
+  create-rabbits (num-of-rabbits)
   ask rabbits
   [ set color white
     setxy (random  5) (random 5) ;;(random 15 - 17) (random 15 - 16)      ;; set this rabbit coordintes to...
     set shape "rabbit"
     set age 0
     set age-max 500
-    set hunger-current 100
-    set hunger-max 500
-    set hunger-comsumption 100
-    set vision 5
-    set speed 0.5
+    set energy-current 100
+    set energy-max 500
+    set energy-per-berry 200
+    set vision global-vision
+    set speed global-speed
+    set weight global-weight
+    set trait-points global-trait-points
     set reproduced false
-    set size 1.5
+    set size global-weight / 2
     set gen 0
     ;; ... a random x & y coordinate
   ]
@@ -62,7 +65,7 @@ to setup-berries
   ask berries
   [
     set color red
-    setxy ((random-xcor / 3) + (max-pxcor / 2)) ((random-ycor / 3) + (max-pycor / 2)) ;;(random 8 - 20) (random 8 - 20)
+    setxy ((random 25) + 7) ((random 25) + 7) ;;(random 8 - 20) (random 8 - 20)
     set shape "circle"
     set size 0.5
   ]
@@ -76,11 +79,19 @@ end
 
 to go
   move-rabbits
-  if not any? rabbits
+  if not any? rabbits[stop]
+  if ticks > 0 and ticks mod 500 = 0
   [
-    stop
-  ]
+    if natural-selection [set num-of-berries (num-of-berries - 1)]
+    create-berries num-of-berries
+    [
+      set color red
+      setxy ((random 20) + 10) ((random 20) + 10) ;;(random 8 - 20) (random 8 - 20)
+      set shape "circle"
+      set size 0.5
+    ]
 
+  ]
   tick                                ;; update screen graphics
 end
 
@@ -95,56 +106,95 @@ to move-rabbits
       ]
     ]
 
-    if hunger-current >= hunger-max [ die ]
+    if energy-current >= energy-max [ die ]
     if age >= age-max [ die ]
     ;;if not any? berries [ stop ]
 
-    if any? berries in-radius vision and hunger-current > 75
+    if any? berries in-radius vision and energy-current > 50
     [
       face nearest-of berries
       if any? berries-here
       [
-        set hunger-current (hunger-current - hunger-comsumption)
+        set energy-current (energy-current - energy-per-berry)
         ask berries-here [die]
       ]
     ]
 
-    if reproduced = false and hunger-current <= 150 and age >= 50
+    if reproduced = false and energy-current < 100
     [
       face nearest-of burrows
       if any? burrows-here
       [
-       hatch-rabbits (random 3)
+       hatch-rabbits ((random 2) + 1)
        [
+
+          let tmp (random 3)
+          let point ((random 2) + 1)
+
+          ifelse vision + speed + weight + point < trait-points
+          [
+            if tmp = 0
+            [
+              set vision (vision + point)
+            ]
+            if tmp = 1
+            [
+              set speed (speed + point)
+            ]
+            if tmp = 2
+            [
+
+              set weight (weight + point)
+            ]
+          ]
+          [
+            if tmp = 0 and (speed - point) > 0 and (weight - (point / 2)) > 1
+            [
+              set vision (vision + point)
+              set speed (speed - (point / 2))
+              set weight (weight - (point / 2))
+
+            ]
+            if tmp = 1 and (vision - point) > 0 and (weight - (point / 2)) > 1
+            [
+              set speed (speed + point)
+              set vision (vision - (point / 2))
+              set weight (weight - (point / 2))
+            ]
+            if tmp = 2 and (vision - (point / 2)) > 0 and (speed - (point / 2)) > 0
+            [
+              set weight (weight + point)
+              set speed (speed - (point / 2))
+              set vision (vision - (point / 2))
+            ]
+          ]
          set age 0
-         set hunger-current 100
+         set energy-current 100
          set reproduced false
-         set color rgb 237 215 154
+         set size (global-weight / 2) + (weight / 10)
+         set color rgb (260 - (vision * 8)) (260 - (speed * 8)) (260 - (weight * 8))
          set gen (gen + 1)
-         set age-max (age-max + (random 5))
-
-         let tmp (random 3)
-
-         if tmp = 0 [set hunger-max (hunger-max + (random 50))]
-         if tmp = 1 [set hunger-comsumption (hunger-comsumption + (random 50))]
-         if tmp = 2 [set vision (vision + (random 5))]
-         if tmp = 3 [set speed (speed + ((random 2) / 10))]
        ]
       set reproduced true
       ]
     ]
+    if any? rabbits in-radius (vision / 2) with [weight > [weight]  of myself and gen = [gen] of myself]
+    [
+      face nearest-of rabbits with [weight > [weight] of myself]
+      right 180
+    ]
 
-    set hunger-current (hunger-current + 1)
+    set energy-current (energy-current + 0.5)
     set age (age + 1)
-    wiggle                            ;; randomly turn a bit
-    forward speed                     ;; move forward 1 step
+    wiggle                                   ;; randomly turn a bit
+    forward (speed / 10)                     ;; move forward 1 step
   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-233
+239
 10
-670
+676
 448
 -1
 -1
@@ -177,7 +227,7 @@ num-of-rabbits
 num-of-rabbits
 0
 100
-10.0
+15.0
 1
 1
 NIL
@@ -192,7 +242,7 @@ num-of-berries
 num-of-berries
 0
 100
-100.0
+11.0
 1
 1
 NIL
@@ -238,38 +288,16 @@ MONITOR
 1133
 147
 NIL
-count rabbits with [gen = 1]
-17
-1
-11
-
-MONITOR
-864
-163
-1133
-208
-NIL
-count rabbits with [gen = 2]
-17
-1
-11
-
-MONITOR
-865
-230
-1135
-275
-NIL
 [gen] of rabbits
 17
 1
 11
 
 MONITOR
-865
-289
-1136
-334
+863
+158
+1134
+203
 NIL
 [speed] of rabbits
 17
@@ -277,37 +305,97 @@ NIL
 11
 
 MONITOR
-864
-356
-1137
-401
+862
+214
+1136
+259
 NIL
 [vision] of rabbits
 17
 1
 11
 
-MONITOR
-864
-422
-1136
-467
+SLIDER
+26
+148
+198
+181
+global-speed
+global-speed
+0
+100
+3.0
+1
+1
 NIL
-[hunger-max] of rabbits
+HORIZONTAL
+
+SLIDER
+25
+192
+197
+225
+global-vision
+global-vision
+0
+100
+3.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+25
+284
+197
+317
+global-trait-points
+global-trait-points
+0
+100
+13.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+25
+239
+197
+272
+global-weight
+global-weight
+0
+100
+3.0
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+863
+274
+1135
+319
+NIL
+[weight] of rabbits
 17
 1
 11
 
-MONITOR
-865
-484
-1135
-529
-NIL
-[hunger-comsumption] of rabbits
-17
+SWITCH
+28
+332
+197
+365
+natural-selection
+natural-selection
+0
 1
-11
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -671,7 +759,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.1
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
