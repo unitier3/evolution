@@ -11,7 +11,7 @@ breed [berries berry]
 breed [rabbits rabbit]
 breed [burrows burrow]
 
-rabbits-own [energy-current energy-max energy-per-berry energy-per-tick age age-max vision speed reproduced gen]
+rabbits-own [energy-current energy-max energy-per-berry age age-max vision speed weight trait-points reproduced gen]
 
 ;-------------------------------------------
 ; here is all the stuff to set things up
@@ -19,7 +19,8 @@ rabbits-own [energy-current energy-max energy-per-berry energy-per-tick age age-
 
 to setup
   clear-all                           ;; clear the screen
-  ask patches [set pcolor green]       ;; set the background (patches) to grey
+  ask patches [set pcolor green]       ;; set the background (patches) to green
+  set num-of-berries 12
   setup-rabbits
   setup-berries
   setup-burrows
@@ -47,12 +48,13 @@ to setup-rabbits
     set age-max 500
     set energy-current 100
     set energy-max 500
-    set energy-per-berry 100
-    set energy-per-tick 5
-    set vision 5
-    set speed 5
+    set energy-per-berry 200
+    set vision global-vision
+    set speed global-speed
+    set weight global-weight
+    set trait-points global-trait-points
     set reproduced false
-    set size 1.5
+    set size global-weight / 2
     set gen 0
     ;; ... a random x & y coordinate
   ]
@@ -80,10 +82,11 @@ to go
   if not any? rabbits[stop]
   if ticks > 0 and ticks mod 500 = 0
   [
+    if natural-selection [set num-of-berries (num-of-berries - 1)]
     create-berries num-of-berries
     [
       set color red
-      setxy ((random-xcor / 3) + (max-pxcor / 2)) ((random-ycor / 3) + (max-pycor / 2)) ;;(random 8 - 20) (random 8 - 20)
+      setxy ((random 20) + 10) ((random 20) + 10) ;;(random 8 - 20) (random 8 - 20)
       set shape "circle"
       set size 0.5
     ]
@@ -122,51 +125,68 @@ to move-rabbits
       face nearest-of burrows
       if any? burrows-here
       [
-       hatch-rabbits ((random 3) + 1)
+       hatch-rabbits ((random 2) + 1)
        [
 
           let tmp (random 3)
           let point ((random 2) + 1)
 
-          if vision - point > 0 and speed - point > 0 and energy-per-tick > 0 and energy-per-tick < 12
+          ifelse vision + speed + weight + point < trait-points
           [
             if tmp = 0
             [
               set vision (vision + point)
-              set speed (speed - (point / 2))
-              set energy-per-tick (energy-per-tick + 1)
-
             ]
             if tmp = 1
             [
               set speed (speed + point)
-              set vision (vision - (point / 2))
-              set energy-per-tick (energy-per-tick + 1)
-
             ]
             if tmp = 2
             [
-              set energy-per-tick (energy-per-tick - 1)
+
+              set weight (weight + point)
+            ]
+          ]
+          [
+            if tmp = 0 and (speed - point) > 0 and (weight - (point / 2)) > 1
+            [
+              set vision (vision + point)
+              set speed (speed - (point / 2))
+              set weight (weight - (point / 2))
+
+            ]
+            if tmp = 1 and (vision - point) > 0 and (weight - (point / 2)) > 1
+            [
+              set speed (speed + point)
+              set vision (vision - (point / 2))
+              set weight (weight - (point / 2))
+            ]
+            if tmp = 2 and (vision - (point / 2)) > 0 and (speed - (point / 2)) > 0
+            [
+              set weight (weight + point)
               set speed (speed - (point / 2))
               set vision (vision - (point / 2))
             ]
           ]
-
-
-
          set age 0
          set energy-current 100
          set reproduced false
-         set color rgb (260 - (vision * 8)) (260 - (speed * 8)) (260 - (energy-per-tick * 8))
+         set size (global-weight / 2) + (weight / 10)
+         set color rgb (260 - (vision * 8)) (260 - (speed * 8)) (260 - (weight * 8))
          set gen (gen + 1)
        ]
       set reproduced true
       ]
     ]
+    if any? rabbits in-radius (vision / 2) with [weight > [weight]  of myself and gen = [gen] of myself]
+    [
+      face nearest-of rabbits with [weight > [weight] of myself]
+      right 180
+    ]
 
-    set energy-current (energy-current + (energy-per-tick / 10))
+    set energy-current (energy-current + 0.5)
     set age (age + 1)
-    wiggle                            ;; randomly turn a bit
+    wiggle                                   ;; randomly turn a bit
     forward (speed / 10)                     ;; move forward 1 step
   ]
 end
@@ -207,7 +227,7 @@ num-of-rabbits
 num-of-rabbits
 0
 100
-10.0
+15.0
 1
 1
 NIL
@@ -222,7 +242,7 @@ num-of-berries
 num-of-berries
 0
 100
-15.0
+11.0
 1
 1
 NIL
@@ -295,38 +315,87 @@ NIL
 1
 11
 
-MONITOR
-862
-272
-1135
+SLIDER
+26
+148
+198
+181
+global-speed
+global-speed
+0
+100
+3.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+25
+192
+197
+225
+global-vision
+global-vision
+0
+100
+3.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+25
+284
+197
 317
+global-trait-points
+global-trait-points
+0
+100
+13.0
+1
+1
 NIL
-[energy-per-berry] of rabbits
+HORIZONTAL
+
+SLIDER
+25
+239
+197
+272
+global-weight
+global-weight
+0
+100
+3.0
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+863
+274
+1135
+319
+NIL
+[weight] of rabbits
 17
 1
 11
 
-MONITOR
-863
-333
-1136
-378
-NIL
-[energy-current] of rabbits
-17
+SWITCH
+28
+332
+197
+365
+natural-selection
+natural-selection
+0
 1
-11
-
-MONITOR
-863
-389
-1136
-434
-NIL
-[energy-per-tick] of rabbits
-17
-1
-11
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -690,7 +759,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.1
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
