@@ -281,7 +281,7 @@ num-of-berries
 num-of-berries
 0
 100
-10.0
+5.0
 1
 1
 NIL
@@ -417,6 +417,28 @@ MONITOR
 240
 NIL
 count rabbits
+17
+1
+11
+
+MONITOR
+1094
+256
+1365
+301
+NIL
+count rabbits with [speed > (global-trait-points / 2)]
+17
+1
+11
+
+MONITOR
+1094
+312
+1365
+357
+NIL
+count rabbits with [vision > (global-trait-points / 2)]
 17
 1
 11
