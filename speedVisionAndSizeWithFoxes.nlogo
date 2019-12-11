@@ -477,7 +477,7 @@ MONITOR
 138
 1722
 183
-NIL
+Total Rabbits with Dominant Speed Trait
 count rabbits with [speed > (global-trait-points / 3)]
 17
 1
@@ -488,7 +488,7 @@ MONITOR
 192
 1719
 237
-NIL
+Total Rabbits with Dominant Vision Trait
 count rabbits with [vision > (global-trait-points / 3)]
 17
 1
@@ -499,7 +499,7 @@ MONITOR
 254
 1727
 299
-NIL
+Total Rabbits with Dominant Weight Trait
 count rabbits with [weight > (global-trait-points / 3)]
 17
 1
