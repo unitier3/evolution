@@ -107,7 +107,7 @@ to go
     create-berries num-of-berries
     [
       set color red
-      setxy ((random 20) + 10) ((random 20) + 10) ;;(random 8 - 20) (random 8 - 20)
+      setxy (random 64) ((random 25) + 5) ;;(random 8 - 20) (random 8 - 20)
       set shape "circle"
       set size 0.5
     ]
@@ -198,7 +198,7 @@ to move-rabbits
          set age 0
          set energy-current 100
          set reproduced false
-         set size (global-weight / 2) + (weight / 10)
+         set size (global-weight / 2) + (weight / 15)
          set color rgb (260 - (vision * 8)) (260 - (speed * 8)) (260 - (weight * 8))
          set gen (gen + 1)
        ]
@@ -285,7 +285,7 @@ num-of-rabbits
 num-of-rabbits
 0
 100
-18.0
+20.0
 1
 1
 NIL
@@ -412,7 +412,7 @@ global-trait-points
 global-trait-points
 0
 100
-13.0
+12.0
 1
 1
 NIL
