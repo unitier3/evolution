@@ -71,10 +71,12 @@ to setup-foxes
     set age 0
     set energy-current 250
     set energy-max 800
-    set energy-per-bunny 250
+    set energy-per-bunny 450
+    set reproduced false
     set vision 3.5
     set speed 3.5
     set size 1.5
+    set age 0
     ;; ... a random x & y coordinate
   ]
 end
@@ -207,13 +209,14 @@ to move-foxes
   [
     if not any? rabbits [ stop ]
     if energy-current >= energy-max [ die ]
+    if age >= 800 [die]
 
     ifelse any? burrows in-radius (vision + 2)
     [
       set heading 45
     ]
     [
-      if energy-current > 250 and any? rabbits with [xcor > 5 and ycor > 5]
+      ifelse energy-current > 250 and any? rabbits with [xcor > 5 and ycor > 5]
       [
         face nearest-of rabbits with [xcor > 5 and ycor > 5]
         if any? rabbits-here
@@ -222,9 +225,31 @@ to move-foxes
           set energy-current (energy-current - energy-per-bunny)
         ]
       ]
+      [
+        if age > 600 and energy-current < 150 and reproduced = false
+        [
+          hatchfoxes 1
+          [
+            set color orange
+            set shape "dog"
+            set age 0
+            set energy-current 250
+            set energy-max 800
+            set energy-per-bunny 450
+            set reproduced false
+            set vision 3.5
+            set speed 3.5
+            set size 1.5
+            set age 0
+          ]
+          set reproduced true
+        ]
+      ]
+
     ]
     set energy-current (energy-current + 0.5)
     wiggle
+    set age (age + 1)
     forward (speed / 10)
 
   ]
@@ -281,7 +306,7 @@ num-of-berries
 num-of-berries
 0
 100
-5.0
+12.0
 1
 1
 NIL
@@ -439,6 +464,17 @@ MONITOR
 357
 NIL
 count rabbits with [vision > (global-trait-points / 2)]
+17
+1
+11
+
+MONITOR
+1137
+404
+1293
+449
+NIL
+[energy-current] of foxes
 17
 1
 11
