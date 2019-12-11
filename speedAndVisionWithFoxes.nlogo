@@ -51,7 +51,7 @@ to setup-rabbits
     set age-max 800
     set energy-current 100
     set energy-max 500
-    set energy-per-berry 200
+    set energy-per-berry 450
     set vision global-vision
     set speed global-speed
     set trait-points global-trait-points
@@ -70,8 +70,8 @@ to setup-foxes
     set shape "dog"
     set age 0
     set energy-current 250
-    set energy-max 500
-    set energy-per-bunny 200
+    set energy-max 800
+    set energy-per-bunny 250
     set vision 3.5
     set speed 3.5
     set size 1.5
@@ -84,7 +84,7 @@ to setup-berries
   ask berries
   [
     set color red
-    setxy ((random 48) + 7) ((random 25) + 7) ;;(random 8 - 20) (random 8 - 20)
+    setxy (random 64) ((random 25) + 5) ;;(random 8 - 20) (random 8 - 20)
     set shape "circle"
     set size 0.5
   ]
@@ -363,7 +363,7 @@ global-speed
 global-speed
 0
 100
-4.0
+3.0
 1
 1
 NIL
