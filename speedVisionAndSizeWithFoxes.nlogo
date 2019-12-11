@@ -226,7 +226,6 @@ to move-foxes
   ask foxes
   [
     if not any? rabbits [ stop ]
-    if energy-current >= energy-max [ die ]
 
     ifelse any? burrows in-radius (vision + 2)
     [
@@ -307,7 +306,7 @@ num-of-berries
 num-of-berries
 0
 100
-12.0
+6.0
 1
 1
 NIL
@@ -478,7 +477,7 @@ MONITOR
 138
 1722
 183
-NIL
+Total Rabbits with Dominant Speed Trait
 count rabbits with [speed > (global-trait-points / 3)]
 17
 1
@@ -489,7 +488,7 @@ MONITOR
 192
 1719
 237
-NIL
+Total Rabbits with Dominant Vision Trait
 count rabbits with [vision > (global-trait-points / 3)]
 17
 1
@@ -500,17 +499,17 @@ MONITOR
 254
 1727
 299
-NIL
+Total Rabbits with Dominant Weight Trait
 count rabbits with [weight > (global-trait-points / 3)]
 17
 1
 11
 
 MONITOR
-1499
-360
-1655
-405
+1474
+334
+1630
+379
 NIL
 [energy-current] of foxes
 17
