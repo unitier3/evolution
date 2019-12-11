@@ -106,7 +106,7 @@ to go
     create-berries num-of-berries
     [
       set color red
-      setxy ((random 20) + 10) ((random 20) + 10) ;;(random 8 - 20) (random 8 - 20)
+      setxy (random 64) ((random 25) + 5) ;;(random 8 - 20) (random 8 - 20)
       set shape "circle"
       set size 0.5
     ]
@@ -266,7 +266,7 @@ num-of-rabbits
 num-of-rabbits
 0
 100
-18.0
+20.0
 1
 1
 NIL
@@ -281,7 +281,7 @@ num-of-berries
 num-of-berries
 0
 100
-12.0
+10.0
 1
 1
 NIL

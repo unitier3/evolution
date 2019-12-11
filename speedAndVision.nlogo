@@ -64,7 +64,7 @@ to setup-berries
   ask berries
   [
     set color red
-    setxy ((random 25) + 7) ((random 25) + 7) ;;(random 8 - 20) (random 8 - 20)
+    setxy (random 64) ((random 25) + 5) ;;(random 8 - 20) (random 8 - 20)
     set shape "circle"
     set size 0.5
   ]
@@ -85,7 +85,7 @@ to go
     create-berries num-of-berries
     [
       set color red
-      setxy ((random 20) + 10) ((random 20) + 10) ;;(random 8 - 20) (random 8 - 20)
+      setxy (random 64) ((random 25) + 5) ;;(random 8 - 20) (random 8 - 20)
       set shape "circle"
       set size 0.5
     ]
@@ -175,7 +175,7 @@ end
 GRAPHICS-WINDOW
 239
 10
-676
+1092
 448
 -1
 -1
@@ -190,7 +190,7 @@ GRAPHICS-WINDOW
 0
 1
 0
-32
+64
 0
 32
 1
@@ -223,7 +223,7 @@ num-of-berries
 num-of-berries
 0
 100
-12.0
+6.0
 1
 1
 NIL
@@ -264,34 +264,34 @@ NIL
 1
 
 MONITOR
-864
-102
-1133
-147
+1114
+64
+1383
+109
 NIL
-[gen] of rabbits
+max [gen] of rabbits
 17
 1
 11
 
 MONITOR
-863
-158
-1134
-203
+1113
+120
+1384
+165
 NIL
-[speed] of rabbits
+sum [speed] of rabbits / count rabbits
 17
 1
 11
 
 MONITOR
-862
-214
-1136
-259
+1112
+176
+1386
+221
 NIL
-[vision] of rabbits
+sum [vision] of rabbits / count rabbits
 17
 1
 11
@@ -348,9 +348,20 @@ SWITCH
 315
 natural-selection
 natural-selection
-1
+0
 1
 -1000
+
+MONITOR
+1113
+237
+1385
+282
+NIL
+count rabbits
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
