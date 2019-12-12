@@ -223,7 +223,7 @@ num-of-berries
 num-of-berries
 0
 100
-6.0
+1.0
 1
 1
 NIL
@@ -359,6 +359,28 @@ MONITOR
 282
 NIL
 count rabbits
+17
+1
+11
+
+MONITOR
+1114
+292
+1444
+337
+Rabbtis with Dominant Speed Trait
+count rabbits with [speed > global-trait-points / 2]
+17
+1
+11
+
+MONITOR
+1115
+345
+1445
+390
+Rabbtis with Dominant Vision Trait
+count rabbits with [vision > global-trait-points / 2]
 17
 1
 11
