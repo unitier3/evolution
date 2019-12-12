@@ -242,7 +242,7 @@ num-of-berries
 num-of-berries
 0
 100
-3.0
+9.0
 1
 1
 NIL
@@ -283,10 +283,10 @@ NIL
 1
 
 MONITOR
-1116
-49
-1385
-94
+1107
+18
+1376
+63
 NIL
 max [gen] of rabbits
 17
@@ -294,10 +294,10 @@ max [gen] of rabbits
 11
 
 MONITOR
-1115
-105
-1386
-150
+1106
+74
+1377
+119
 NIL
 sum [speed] of rabbits / count rabbits
 17
@@ -305,10 +305,10 @@ sum [speed] of rabbits / count rabbits
 11
 
 MONITOR
-1114
-161
-1388
-206
+1105
+130
+1379
+175
 NIL
 sum [vision] of rabbits / count rabbits
 17
@@ -376,10 +376,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-1115
-221
-1387
-266
+1105
+181
+1377
+226
 NIL
 sum [weight] of rabbits / count rabbits
 17
@@ -398,12 +398,45 @@ natural-selection
 -1000
 
 MONITOR
-1114
-284
-1386
-329
+1105
+232
+1377
+277
 NIL
 count rabbits
+17
+1
+11
+
+MONITOR
+1105
+281
+1329
+326
+Rabbits with Dominant Speed Trait
+count rabbits with [speed > global-trait-points / 3]
+17
+1
+11
+
+MONITOR
+1104
+332
+1329
+377
+Rabbits with Dominant Vision Trait
+count rabbits with [vision > global-trait-points / 3]
+17
+1
+11
+
+MONITOR
+1104
+384
+1332
+429
+Rabbits with Dominant Weight Trait
+count rabbits with [weight > global-trait-points / 3]
 17
 1
 11
