@@ -242,7 +242,7 @@ num-of-berries
 num-of-berries
 0
 100
-9.0
+11.0
 1
 1
 NIL
@@ -411,9 +411,9 @@ count rabbits
 MONITOR
 1105
 281
-1329
+1397
 326
-Rabbits with Dominant Speed Trait
+NIL
 count rabbits with [speed > global-trait-points / 3]
 17
 1
@@ -422,9 +422,9 @@ count rabbits with [speed > global-trait-points / 3]
 MONITOR
 1104
 332
-1329
+1398
 377
-Rabbits with Dominant Vision Trait
+NIL
 count rabbits with [vision > global-trait-points / 3]
 17
 1
@@ -433,13 +433,33 @@ count rabbits with [vision > global-trait-points / 3]
 MONITOR
 1104
 384
-1332
+1398
 429
-Rabbits with Dominant Weight Trait
+NIL
 count rabbits with [weight > global-trait-points / 3]
 17
 1
 11
+
+PLOT
+244
+456
+1094
+805
+speed, vision and size!
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"speed" 1.0 0 -2674135 true "" "plot count rabbits with [speed > global-trait-points / 3]"
+"vision" 1.0 0 -13840069 true "" "plot count rabbits with [vision > global-trait-points / 3]"
+"weight" 1.0 0 -13345367 true "" "plot count rabbits with [weight > global-trait-points / 3]"
 
 @#$#@#$#@
 ## WHAT IS IT?
